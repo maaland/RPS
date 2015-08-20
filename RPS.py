@@ -4,23 +4,15 @@ from random import randint
 
 
 
-class Spiller:
+class Tilfeldig:
 
     type = None
     last = "papir"
     lastChoice = None
 
-    def __init__(self, type):
-        if type == "tilfeldig":
-            self.type = type
-        elif type == "sekvensiell":
-            self.type = type
-        elif type == "mestvanlig":
-            self.type = type
-        elif type == "historiker":
-            self.type = type
-        else:
-            print ("Ugyldig typevalg")
+    def __init__(self):
+            self.type = "tilfeldig"
+
 
 
     def velg_aksjon(self):
@@ -35,24 +27,27 @@ class Spiller:
             else:
                 self.lastChoice = "papir"
                 return "papir"
-        elif self.type == "sekvensiell":
 
-            next = None
-            if self.last == "stein":
-                next = "saks"
-            elif self.last == "saks":
-                next = "papir"
-            elif self.last == "papir":
-                next = "stein"
-            else:
-                print ("Ugyldig trekk")
-            self.last = next
-            self.lastChoice = next
-            return next
 
     def motta_resultat(self):
         return self.lastChoice
 
+class Sekvensiell:
+    last = "papir"
+
+    def velg_aksjon(self):
+        next = None
+        if self.last == "stein":
+            next = "saks"
+        elif self.last == "saks":
+            next = "papir"
+        elif self.last == "papir":
+            next = "stein"
+        else:
+            print ("Ugyldig trekk")
+        self.last = next
+        self.lastChoice = next
+        return next
 
 
 
@@ -65,8 +60,7 @@ class Spiller:
 
 
 
-
-spiller1 = Spiller("sekvensiell")
+spiller1 = Sekvensiell()
 print (spiller1.velg_aksjon())
 print (spiller1.velg_aksjon())
 print (spiller1.velg_aksjon())
