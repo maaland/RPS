@@ -33,7 +33,13 @@ class Tilfeldig:
         return self.lastChoice
 
 class Sekvensiell:
+    type = None
     last = "papir"
+    lastChoice = None
+
+    def __init__(self):
+        self.type = "tilfeldig"
+
 
     def velg_aksjon(self):
         next = None
@@ -49,6 +55,28 @@ class Sekvensiell:
         self.lastChoice = next
         return next
 
+    def motta_resultat(self):
+        return self.lastChoice
+
+class MestVanlig:
+    rocks = 0
+    papers = 0
+    scissors = 0
+
+
+    def __init__(self):
+        self.type = "MestVanlig"
+
+
+    def addAction(self, action):
+        if action == "stein":
+            self.rocks = self.rocks + 1
+        elif action == "saks":
+            self.scissors = self.scissors + 1
+        elif action == "papir":
+            self.paper = self.paper + 1
+        else:
+            print ("Ugyldig trekk")
 
 
 
@@ -60,16 +88,19 @@ class Sekvensiell:
 
 
 
-spiller1 = Sekvensiell()
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
-print (spiller1.velg_aksjon())
+
+
+spiller1 = MestVanlig()
+spiller2 = Sekvensiell()
+spiller2.velg_aksjon()
+print (spiller2.motta_resultat())
+spiller1.addAction(spiller2.motta_resultat())
+print (spiller1.rocks)
+print (spiller1.papers)
+print (spiller1.scissors)
+
+
+
 
 
 
