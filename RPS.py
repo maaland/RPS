@@ -8,6 +8,7 @@ class Spiller:
 
     type = None
     last = "papir"
+    lastChoice = None
 
     def __init__(self, type):
         if type == "tilfeldig":
@@ -26,10 +27,13 @@ class Spiller:
         if self.type == "tilfeldig":
             n = randint(0,2)
             if n == 0:
+                self.lastChoice = "stein"
                 return "stein"
             elif n == 1:
+                self.lastChoice = "saks"
                 return "saks"
             else:
+                self.lastChoice = "papir"
                 return "papir"
         elif self.type == "sekvensiell":
 
@@ -43,7 +47,12 @@ class Spiller:
             else:
                 print ("Ugyldig trekk")
             self.last = next
+            self.lastChoice = next
             return next
+
+    def motta_resultat(self):
+        return self.lastChoice
+
 
 
 
