@@ -59,9 +59,7 @@ class Sekvensiell:
         return self.lastChoice
 
 class MestVanlig:
-    rocks = 0
-    papers = 0
-    scissors = 0
+    counts = [0, 0, 0]
 
 
     def __init__(self):
@@ -70,13 +68,37 @@ class MestVanlig:
 
     def addAction(self, action):
         if action == "stein":
-            self.rocks = self.rocks + 1
+            self.counts[0] = self.counts[0] +1
         elif action == "saks":
-            self.scissors = self.scissors + 1
+            self.counts[1] = self.counts[1] +1
         elif action == "papir":
-            self.paper = self.paper + 1
+            self.counts[2] = self.counts[2] +1
         else:
             print ("Ugyldig trekk")
+
+    def velg_aksjon(self):
+        maxN = max(self.counts)
+        if maxN == 0:
+            n = randint(0,2)
+            if n == 0:
+                self.lastChoice = "stein"
+                return "stein"
+            elif n == 1:
+                self.lastChoice = "saks"
+                return "saks"
+            else:
+                self.lastChoice = "papir"
+                return "papir"
+        mostCommon = self.counts.index(maxN)
+        if mostCommon == 0:
+            return "papir"
+        elif mostCommon == 1:
+            return "stein"
+        else:
+            return "saks"
+
+
+
 
 
 
@@ -95,9 +117,8 @@ spiller2 = Sekvensiell()
 spiller2.velg_aksjon()
 print (spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.rocks)
-print (spiller1.papers)
-print (spiller1.scissors)
+print (spiller1.counts)
+print (spiller1.velg_aksjon())
 
 
 
