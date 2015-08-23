@@ -67,6 +67,7 @@ class Sekvensiell:
 class MestVanlig:
     counts = [0, 0, 0]
     type = None
+    lastChoice = None
 
 
     def __init__(self):
@@ -74,6 +75,9 @@ class MestVanlig:
 
     def oppgi_navn(self):
         return self.type
+
+    def motta_resultat(self):
+        return self.lastChoice
 
 
     def addAction(self, action):
@@ -112,6 +116,7 @@ class Historiker:
     husk = None
     history = []
     counts = [0, 0, 0]
+    lastChoice = None
 
     def __init__(self, husk):
         self.type = "historiker"
@@ -119,6 +124,10 @@ class Historiker:
 
     def oppgi_navn(self):
         return self.type
+
+    def motta_resultat(self):
+        return self.lastChoice
+
 
     def addAction(self, action):
         if action == "stein":
@@ -143,10 +152,13 @@ class Historiker:
                     maxN = max(self.counts)
                     mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
                     if mostCommon == 0:
+                        self.lastChoice = "papir"
                         return "papir"
                     elif mostCommon == 1:
+                        self.lastChoice = "stein"
                         return "stein"
                     else:
+                        self.lastChoice = "saks"
                         return "saks"
                 else:
                     return self.counter(target)
@@ -257,6 +269,7 @@ spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
 print ("Historiker spiller " + spiller1.velg_aksjon())
 print ("tilfeldig spiller " + spiller2.velg_aksjon())
+print (spiller1.motta_resultat())
 
 
 
