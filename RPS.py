@@ -142,6 +142,7 @@ class Historiker:
         else:
             print ("Ugyldig trekk")
 
+    @property
     def velg_aksjon(self):
         target = None
         if self.history:
@@ -151,7 +152,7 @@ class Historiker:
                 positions.pop() #removes the last position, which we dont need
                 if positions:
                     for p in positions:
-                        self.count(self.history[p+1])
+                        self.count(self.history[p+1]) #counts up the actions follow the pattern
                     maxN = max(self.counts)
                     mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
                     if mostCommon == 0:
@@ -167,19 +168,32 @@ class Historiker:
                     return self.counter(target)
             elif self.husk > 1:
                 if len(self.history) >= self.husk:
-                    return next(self.KnuthMorrisPratt(self.history, self.history[-self.husk:]))
+                    positions = []
+                    for pos in self.KnuthMorrisPratt(self.history, self.history[-self.husk:]):   #iterates through the occurances of the husk-last actions
+                        if pos + self.husk < len(self.history)-1: #filters out the last occurance
+                            positions.append(pos)                 #adds the positions of the occurances to a list
+                    if positions:
+                        for p in positions:
+                            self.count(self.history[p+self.husk])    #counts up the actions follow the pattern
+                        maxN = max(self.counts)
+                        mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
+                        if mostCommon == 0:
+                            self.lastChoice = "papir"
+                            return "counter:  papir"
+                        elif mostCommon == 1:
+                            self.lastChoice = "stein"
+                            return "counter: stein"
+                        else:
+                            self.lastChoice = "saks"
+                            return "counter: saks"
+                    else:
+                        return "random " + self.randomAction() #random if the pattern is not found
+                else:
+                    return "random " + self.randomAction()     #random if the pattern is longer than the history
 
 
-        else:
-            n = randint(0,2)
-            if n == 0:
-                self.lastChoice = "stein"
-                return "stein"
-            elif n == 1:
-                self.lastChoice = "saks"
-                return "saks"
-            else:
-                self.lastChoice = "papir"
+
+
 
 
 
@@ -213,6 +227,18 @@ class Historiker:
             return "saks"
         else:
             return "Ugyldig trekk"
+
+    def randomAction(self):
+        n = randint(0,2)
+        if n == 0:
+            self.lastChoice = "stein"
+            return "stein"
+        elif n == 1:
+            self.lastChoice = "saks"
+            return "saks"
+        else:
+            self.lastChoice = "papir"
+            return "papir"
 
 
 
@@ -284,22 +310,42 @@ print ("Tilfeldig spiller " + spiller2.velg_aksjon())
 print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
-print (spiller1.velg_aksjon())
+print (spiller1.velg_aksjon)
 print ("Tilfeldig spiller " + spiller2.velg_aksjon())
 print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
-print (spiller1.velg_aksjon())
+print (spiller1.velg_aksjon)
 print ("Tilfeldig spiller " + spiller2.velg_aksjon())
 print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
-print (spiller1.velg_aksjon())
+print (spiller1.velg_aksjon)
 print ("Tilfeldig spiller " + spiller2.velg_aksjon())
 print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
-print (spiller1.velg_aksjon())
+print (spiller1.velg_aksjon)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon())
+print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+spiller1.addAction(spiller2.motta_resultat())
+print (spiller1.history)
+print (spiller1.velg_aksjon)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon())
+print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+spiller1.addAction(spiller2.motta_resultat())
+print (spiller1.history)
+print (spiller1.velg_aksjon)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon())
+print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+spiller1.addAction(spiller2.motta_resultat())
+print (spiller1.history)
+print (spiller1.velg_aksjon)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon())
+print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+spiller1.addAction(spiller2.motta_resultat())
+print (spiller1.history)
+print (spiller1.velg_aksjon)
 
 
 
