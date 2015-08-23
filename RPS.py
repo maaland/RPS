@@ -32,13 +32,19 @@ class Tilfeldig:
     def motta_resultat(self):
         return self.lastChoice
 
+    def oppgi_navn(self):
+        return self.type
+
 class Sekvensiell:
     type = None
     last = "papir"
     lastChoice = None
 
     def __init__(self):
-        self.type = "tilfeldig"
+        self.type = "sekvensiell"
+
+    def oppgi_navn(self):
+        return self.type
 
 
     def velg_aksjon(self):
@@ -60,10 +66,14 @@ class Sekvensiell:
 
 class MestVanlig:
     counts = [0, 0, 0]
+    type = None
 
 
     def __init__(self):
         self.type = "MestVanlig"
+
+    def oppgi_navn(self):
+        return self.type
 
 
     def addAction(self, action):
@@ -89,7 +99,7 @@ class MestVanlig:
             else:
                 self.lastChoice = "papir"
                 return "papir"
-        mostCommon = self.counts.index(maxN)
+        mostCommon = self.counts.index(maxN) #doesnt consider situations with several as common choices
         if mostCommon == 0:
             return "papir"
         elif mostCommon == 1:
@@ -113,12 +123,16 @@ class MestVanlig:
 
 
 spiller1 = MestVanlig()
-spiller2 = Sekvensiell()
+spiller2 = Tilfeldig()
+print (spiller1.oppgi_navn())
+print (spiller2.oppgi_navn())
 spiller2.velg_aksjon()
 print (spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.counts)
 print (spiller1.velg_aksjon())
+spiller2.velg_aksjon()
+
 
 
 
