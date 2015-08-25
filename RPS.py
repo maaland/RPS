@@ -199,7 +199,7 @@ class Historiker:
 
 
 
-    def get_positions(self, target):
+    def get_positions(self, target):    #helper function to add targets positions to a list
         positions = []
         counter = 0
         for i in self.history:
@@ -208,7 +208,7 @@ class Historiker:
             counter = counter + 1
         return positions
 
-    def count(self, action):
+    def count(self, action):   #helper function to count actions
         if action == "stein":
             self.counts[0] = self.counts[0] +1
         elif action == "saks":
@@ -218,7 +218,7 @@ class Historiker:
         else:
             print ("Ugyldig trekk")
 
-    def counter(self, action):
+    def counter(self, action):   #helper function to choose a counter for an action
         if action == "stein":
             return "papir"
         elif action == "saks":
@@ -228,7 +228,7 @@ class Historiker:
         else:
             return "Ugyldig trekk"
 
-    def randomAction(self):
+    def randomAction(self):    #helper function to choose a random action
         n = randint(0,2)
         if n == 0:
             self.lastChoice = "stein"
@@ -281,13 +281,24 @@ class Historiker:
 
 
 
+class Aksjon:
+
+    def __init__(self, action):
+        self.action = action
 
 
+    def __eq__(self, other):
+        return other.action == self.action
 
-
-
-
-
+    def __gt__(self, other):
+        if self.action == "stein":
+            return other.action == "saks"
+        elif self.action == "saks":
+            return other.action == "papir"
+        elif self.action == "papir":
+            return other.action == "stein"
+        else:
+            return "Ugyldig trekk"
 
 
 
@@ -346,6 +357,14 @@ print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
 print (spiller1.velg_aksjon)
+action1 = Aksjon("stein")
+action2 = Aksjon("stein")
+action3 = Aksjon("papir")
+print (action1.__eq__(action2))
+print (action1.__gt__(action2))
+print (action3.__gt__(action1))
+print (action3.__eq__(action1))
+
 
 
 
