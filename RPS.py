@@ -300,6 +300,43 @@ class Aksjon:
         else:
             return "Ugyldig trekk"
 
+class EnkeltSpill:
+    resultat = [0, 0]
+
+    def __init__(self, spiller1, spiller2):
+        if spiller1 == "tilfeldig":
+            self.spiller1 = Tilfeldig()
+        elif spiller1 == "sekvensiell":
+            self.spiller1 = Sekvensiell()
+        elif spiller1 == "mestvanlig":
+            self.spiller1 = MestVanlig()
+        elif spiller1 == "historiker":
+            husk = input("Husk: ")
+            if int(husk) > 0:
+                self.spiller1 = Historiker(husk)
+        if spiller2 == "tilfeldig":
+            self.spiller2 = Tilfeldig()
+        elif spiller2 == "sekvensiell":
+            self.spiller2 = Sekvensiell()
+        elif spiller2 == "mestvanlig":
+            self.spiller2 = MestVanlig()
+        elif spiller2 == "historiker":
+            husk = input("Husk: ")
+            if int(husk) > 0:
+                self.spiller2 = Historiker(husk)
+
+    def gjennomfoer_spill(self):
+        spiller1valg = Aksjon(input("Spiller 1: "))
+        spiller2valg = Aksjon(input("Spiller 2: "))
+        if spiller1valg.__gt__(spiller2valg):         #if player 1 wins, add 1 point
+            self.resultat[0] = self.resultat[0] + 1
+        elif spiller1valg.__eq__(spiller2valg):      #if tie, add 0.5 points to both
+            self.resultat[0] = self.resultat[0] + 0.5
+            self.resultat[1] = self.resultat[1] + 0.5
+        else:
+            self.resultat[1] = self.resultat[1] + 1    #player 2 wins, add 1 point
+
+        return spiller1valg.action, spiller2valg.action, self.resultat
 
 
 
@@ -313,7 +350,19 @@ class Aksjon:
 
 
 
-spiller1 = Historiker(2)
+
+
+
+
+
+
+
+
+
+
+
+
+'''spiller1 = Historiker(2)
 spiller2 = Tilfeldig()
 print (spiller1.oppgi_navn())
 print (spiller2.oppgi_navn())
@@ -356,14 +405,18 @@ print ("Tilfeldig spiller " + spiller2.velg_aksjon())
 print ("Tilfeldiig spilte " + spiller2.motta_resultat())
 spiller1.addAction(spiller2.motta_resultat())
 print (spiller1.history)
-print (spiller1.velg_aksjon)
-action1 = Aksjon("stein")
+print (spiller1.velg_aksjon)'''
+'''action1 = Aksjon("stein")
 action2 = Aksjon("stein")
 action3 = Aksjon("papir")
 print (action1.__eq__(action2))
 print (action1.__gt__(action2))
 print (action3.__gt__(action1))
-print (action3.__eq__(action1))
+print (action3.__eq__(action1))'''
+spill = EnkeltSpill("historiker", "sekvensiell")
+print (spill.spiller1.oppgi_navn())
+print (spill.spiller2.oppgi_navn())
+print (spill.gjennomfoer_spill())
 
 
 
