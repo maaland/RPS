@@ -93,11 +93,11 @@ class MestVanlig:
 
 
     def addAction(self, action):
-        if action == "stein":
+        if action.action == "stein":
             self.counts[0] = self.counts[0] +1
-        elif action == "saks":
+        elif action.action == "saks":
             self.counts[1] = self.counts[1] +1
-        elif action == "papir":
+        elif action.action == "papir":
             self.counts[2] = self.counts[2] +1
         else:
             print ("Ugyldig trekk")
@@ -107,21 +107,21 @@ class MestVanlig:
         if maxN == 0:
             n = randint(0,2)
             if n == 0:
-                self.lastChoice = "stein"
-                return "stein"
+                self.lastChoice = Aksjon("stein")
+                return self.lastChoice
             elif n == 1:
-                self.lastChoice = "saks"
-                return "saks"
+                self.lastChoice = Aksjon("saks")
+                return self.lastChoice
             else:
-                self.lastChoice = "papir"
-                return "papir"
+                self.lastChoice = Aksjon("papir")
+                return self.lastChoice
         mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
         if mostCommon == 0:
-            return "papir"
+            return Aksjon("papir")
         elif mostCommon == 1:
-            return "stein"
+            return Aksjon("stein")
         else:
-            return "saks"
+            return Aksjon("saks")
 
 class Historiker:
     type = None
