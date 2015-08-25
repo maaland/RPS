@@ -20,7 +20,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class Tilfeldig:
 
     type = None
-    last = "papir"
     lastChoice = None
 
     def __init__(self):
@@ -29,17 +28,17 @@ class Tilfeldig:
 
 
     def velg_aksjon(self):
-        if self.type == "tilfeldig":
-            n = randint(0,2)
-            if n == 0:
-                self.lastChoice = "stein"
-                return "stein"
-            elif n == 1:
-                self.lastChoice = "saks"
-                return "saks"
-            else:
-                self.lastChoice = "papir"
-                return "papir"
+
+        n = randint(0,2)
+        if n == 0:
+            self.lastChoice = Aksjon("stein")
+            return self.lastChoice
+        elif n == 1:
+            self.lastChoice = Aksjon("saks")
+            return self.lastChoice
+        else:
+            self.lastChoice = Aksjon("papir")
+            return self.lastChoice
 
 
     def motta_resultat(self):
@@ -50,7 +49,7 @@ class Tilfeldig:
 
 class Sekvensiell:
     type = None
-    last = "papir"
+    last = Aksjon("papir")
     lastChoice = None
 
     def __init__(self):
@@ -62,12 +61,12 @@ class Sekvensiell:
 
     def velg_aksjon(self):
         next = None
-        if self.last == "stein":
-            next = "saks"
-        elif self.last == "saks":
-            next = "papir"
-        elif self.last == "papir":
-            next = "stein"
+        if self.last.action == "stein":
+            next = Aksjon("saks")
+        elif self.last.action == "saks":
+            next = Aksjon("papir")
+        elif self.last.action == "papir":
+            next = Aksjon("stein")
         else:
             print ("Ugyldig trekk")
         self.last = next
@@ -292,6 +291,7 @@ class Historiker:
 
 
 class Aksjon:
+    action = None
 
     def __init__(self, action):
         self.action = action
@@ -361,6 +361,8 @@ class EnkeltSpill:
             res = res + "og det ble uavgjort"
 
         return res
+
+
 
 
 
