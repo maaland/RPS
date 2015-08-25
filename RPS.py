@@ -12,7 +12,25 @@ from tkinter.ttk import Frame, Button, Label, Style
 import pylab
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+class Aksjon:
+    action = None
 
+    def __init__(self, action):
+        self.action = action
+
+
+    def __eq__(self, other):
+        return other.action == self.action
+
+    def __gt__(self, other):
+        if self.action == "stein":
+            return other.action == "saks"
+        elif self.action == "saks":
+            return other.action == "papir"
+        elif self.action == "papir":
+            return other.action == "stein"
+        else:
+            return "Ugyldig trekk"
 
 
 
@@ -142,11 +160,11 @@ class Historiker:
 
 
     def addAction(self, action):
-        if action == "stein":
+        if action.action == "stein":
             self.history.append(action)
-        elif action == "saks":
+        elif action.action == "saks":
             self.history.append(action)
-        elif action == "papir":
+        elif action.action == "papir":
             self.history.append(action)
         else:
             print ("Ugyldig trekk")
@@ -165,14 +183,14 @@ class Historiker:
                     maxN = max(self.counts)
                     mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
                     if mostCommon == 0:
-                        self.lastChoice = "papir"
-                        return "papir"
+                        self.lastChoice = Aksjon("papir")
+                        return self.lastChoice
                     elif mostCommon == 1:
-                        self.lastChoice = "stein"
-                        return "stein"
+                        self.lastChoice = Aksjon("stein")
+                        return self.lastChoice
                     else:
-                        self.lastChoice = "saks"
-                        return "saks"
+                        self.lastChoice = Aksjon("saks")
+                        return self.lastChoice
                 else:
                     return self.counter(target)
             elif self.husk > 1:
@@ -187,18 +205,18 @@ class Historiker:
                         maxN = max(self.counts)
                         mostCommon = self.counts.index(maxN) #doesnt consider situations with several common choices
                         if mostCommon == 0:
-                            self.lastChoice = "papir"
-                            return "counter:  papir"
+                            self.lastChoice = Aksjon("papir")
+                            return self.lastChoice
                         elif mostCommon == 1:
-                            self.lastChoice = "stein"
-                            return "counter: stein"
+                            self.lastChoice = Aksjon("stein")
+                            return self.lastChoice
                         else:
-                            self.lastChoice = "saks"
-                            return "counter: saks"
+                            self.lastChoice = Aksjon("saks")
+                            return self.lastChoice
                     else:
-                        return "random " + self.randomAction() #random if the pattern is not found
+                        return self.randomAction() #random if the pattern is not found
                 else:
-                    return "random " + self.randomAction()     #random if the pattern is longer than the history
+                    return self.randomAction()     #random if the pattern is longer than the history
 
 
 
@@ -218,36 +236,36 @@ class Historiker:
         return positions
 
     def count(self, action):   #helper function to count actions
-        if action == "stein":
+        if action.action == "stein":
             self.counts[0] = self.counts[0] +1
-        elif action == "saks":
+        elif action.action == "saks":
             self.counts[1] = self.counts[1] +1
-        elif action == "papir":
+        elif action.action == "papir":
             self.counts[2] = self.counts[2] +1
         else:
             print ("Ugyldig trekk")
 
     def counter(self, action):   #helper function to choose a counter for an action
-        if action == "stein":
-            return "papir"
-        elif action == "saks":
-            return "stein"
-        elif action == "papir":
-            return "saks"
+        if action.action == "stein":
+            return Aksjon("papir")
+        elif action.action == "saks":
+            return Aksjon("stein")
+        elif action.action == "papir":
+            return Aksjon("saks")
         else:
             return "Ugyldig trekk"
 
     def randomAction(self):    #helper function to choose a random action
         n = randint(0,2)
         if n == 0:
-            self.lastChoice = "stein"
-            return "stein"
+            self.lastChoice = Aksjon("stein")
+            return self.lastChoice
         elif n == 1:
-            self.lastChoice = "saks"
-            return "saks"
+            self.lastChoice = Aksjon("saks")
+            return self.lastChoice
         else:
-            self.lastChoice = "papir"
-            return "papir"
+            self.lastChoice = Aksjon("papir")
+            return self.lastChoice
 
 
 
@@ -290,25 +308,7 @@ class Historiker:
 
 
 
-class Aksjon:
-    action = None
 
-    def __init__(self, action):
-        self.action = action
-
-
-    def __eq__(self, other):
-        return other.action == self.action
-
-    def __gt__(self, other):
-        if self.action == "stein":
-            return other.action == "saks"
-        elif self.action == "saks":
-            return other.action == "papir"
-        elif self.action == "papir":
-            return other.action == "stein"
-        else:
-            return "Ugyldig trekk"
 
 class EnkeltSpill:
     resultat = [0, 0]
@@ -387,50 +387,61 @@ class EnkeltSpill:
 
 
 
-'''spiller1 = Historiker(2)
+spiller1 = Historiker(2)
 spiller2 = Tilfeldig()
 print (spiller1.oppgi_navn())
 print (spiller2.oppgi_navn())
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+print ("Tilfeldig spiller " + spiller2.velg_aksjon().action)
+print ("Tilfeldiig spilte " + spiller2.motta_resultat().action)
 spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
-spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)
-print ("Tilfeldig spiller " + spiller2.velg_aksjon())
-print ("Tilfeldiig spilte " + spiller2.motta_resultat())
-spiller1.addAction(spiller2.motta_resultat())
-print (spiller1.history)
-print (spiller1.velg_aksjon)'''
+printhistory = []
+for a in spiller1.history:
+    printhistory.append(a.action)
+print(printhistory)
+print (spiller1.velg_aksjon.action)
+
+
+
 '''action1 = Aksjon("stein")
 action2 = Aksjon("stein")
 action3 = Aksjon("papir")
@@ -544,14 +555,14 @@ class GUITournament(Frame):
 
 
 
-# Styrer spiller gjennom Tkinter/GUI.
+'''# Styrer spiller gjennom Tkinter/GUI.
 root = Tk()
 # Definer et vindu med gitte dimensjoner
 root.geometry("1100x500+300+300")
 # Lag instans, og kjoer oppsett av GUI (knapper etc)
 GUITournament(root, Historiker(2)).setup_gui()
 # Vis vindu, og utfoer tilhoerende kommandoer
-root.mainloop()
+root.mainloop()'''
 
 
 
