@@ -302,6 +302,7 @@ class Aksjon:
 
 class EnkeltSpill:
     resultat = [0, 0]
+    choices = []
 
     def __init__(self, spiller1, spiller2):
         if spiller1 == "tilfeldig":
@@ -327,7 +328,9 @@ class EnkeltSpill:
 
     def gjennomfoer_spill(self):
         spiller1valg = Aksjon(input("Spiller 1: "))
+        self.choices.append(spiller1valg.action)       #add the chosen action to choices
         spiller2valg = Aksjon(input("Spiller 2: "))
+        self.choices.append(spiller2valg.action)
         if spiller1valg.__gt__(spiller2valg):         #if player 1 wins, add 1 point
             self.resultat[0] = self.resultat[0] + 1
         elif spiller1valg.__eq__(spiller2valg):      #if tie, add 0.5 points to both
@@ -338,7 +341,16 @@ class EnkeltSpill:
 
         return spiller1valg.action, spiller2valg.action, self.resultat
 
+    def __str__(self):
+        res = "Spiller 1 valgte {}, Spiller 2 valgte {} ".format(self.choices[0], self.choices[1])
+        if self.resultat[0] == 1:
+            res = res + "og spiller 1 vant"
+        elif self.resultat[1] == 1:
+            res = res + "og spiller 2 vant"
+        elif self.resultat[0] == 0.5:
+            res = res + "og det ble uavgjort"
 
+        return res
 
 
 
@@ -417,6 +429,7 @@ spill = EnkeltSpill("historiker", "sekvensiell")
 print (spill.spiller1.oppgi_navn())
 print (spill.spiller2.oppgi_navn())
 print (spill.gjennomfoer_spill())
+print (spill)
 
 
 
