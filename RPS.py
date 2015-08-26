@@ -348,11 +348,10 @@ class EnkeltSpill:
             self.resultat[1] = self.resultat[1] + 1  # player 2 wins, add 1 point
             self.winner[0] = 2
 
-        return spiller1aksjon.action, spiller2aksjon.action, self.resultat
+        return (spiller1aksjon.action, spiller2aksjon.action, self.resultat)
 
     def __str__(self):
-        res = "{}: {}, {}: {} ".format(self.spiller1.oppgi_navn(), self.choices[-2], self.spiller2.oppgi_navn(),
-                                       self.choices[-1])
+        res = "{}: {}, {}: {} ".format(self.spiller1.oppgi_navn(), self.choices[-2], self.spiller2.oppgi_navn(), self.choices[-1])
         if self.winner[0] == 1:
             res = res + "og {} vant".format(self.spiller1.oppgi_navn())
         elif self.winner[0] == 2:
@@ -364,12 +363,39 @@ class EnkeltSpill:
 
 
 class MangeSpill:
+
+
+
+
     def __init__(self, spiller1, spiller2, antall_spill):
         self.antall_spill = antall_spill
         self.enkeltSpill = EnkeltSpill(spiller1, spiller2)
+        self.spiller1 = self.enkeltSpill.spiller1
+        self.spiller2 = self.enkeltSpill.spiller2
 
     def arranger_enkeltspill(self):
-        return self.enkeltSpill.gjennomfoer_spill
+        return self.enkeltSpill.gjennomfoer_spill()
+
+    def arranger_turnering(self):
+        spilt = 0
+        pros1 = 0
+        pros2 = 0
+        turneringspill = None
+        while spilt <= self.antall_spill:
+            turneringspill = self.arranger_enkeltspill()
+            spilt = spilt + 1
+        if turneringspill:
+            pros1 = (turneringspill[2][0] / sum(turneringspill[2])) * 100
+            pros2 = (turneringspill[2][1] / sum(turneringspill[2])) * 100
+        return pros1, pros2
+
+    def __str__(self):
+        return self.enkeltSpill.__str__()
+
+
+
+
+
 
 
 '''spiller1 = Historiker(2)
@@ -433,24 +459,10 @@ print (action1.__eq__(action2))
 print (action1.__gt__(action2))
 print (action3.__gt__(action1))
 print (action3.__eq__(action1))'''
-spill = EnkeltSpill("historiker", "sekvensiell")
+spill = MangeSpill("historiker", "sekvensiell", 100)
 print(spill.spiller1.oppgi_navn())
 print(spill.spiller2.oppgi_navn())
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
-print(spill)
-print(spill.gjennomfoer_spill())
+print(spill.arranger_turnering())
 print(spill)
 
 
