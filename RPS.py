@@ -11,6 +11,8 @@ from tkinter import Tk, BOTH, StringVar
 from tkinter.ttk import Frame, Button, Label, Style
 import pylab
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+import numpy
 
 
 class Aksjon:
@@ -23,14 +25,14 @@ class Aksjon:
         return other.action == self.action
 
     def __gt__(self, other):
-        if self.action == "stein":
+        if self.action.lower() == "stein":
             return other.action == "saks"
-        elif self.action == "saks":
+        elif self.action.lower() == "saks":
             return other.action == "papir"
-        elif self.action == "papir":
+        elif self.action.lower() == "papir":
             return other.action == "stein"
         else:
-            return "Ugyldig trekk"
+            return "gt: Ugyldig trekk"
 
 
 class Tilfeldig:
@@ -74,15 +76,15 @@ class Sekvensiell:
         next = None
         if not self.lastChoice:
             next = Aksjon("stein")
-        elif self.lastChoice.action == "stein":
+        elif self.lastChoice.action.lower() == "stein":
             next = Aksjon("saks")
-        elif self.lastChoice.action == "saks":
+        elif self.lastChoice.action.lower() == "saks":
             next = Aksjon("papir")
-        elif self.lastChoice.action == "papir":
+        elif self.lastChoice.action.lower() == "papir":
             next = Aksjon("stein")
 
         else:
-            print("Ugyldig trekk")
+            print("velg_aksjon: Ugyldig trekk")
         self.lastChoice = next
         return self.lastChoice
 
@@ -105,11 +107,11 @@ class MestVanlig:
         return self.lastChoice
 
     def addAction(self, action):
-        if action.action == "stein":
+        if action.action.lower() == "stein":
             self.counts[0] = self.counts[0] + 1
-        elif action.action == "saks":
+        elif action.action.lower() == "saks":
             self.counts[1] = self.counts[1] + 1
-        elif action.action == "papir":
+        elif action.action.lower() == "papir":
             self.counts[2] = self.counts[2] + 1
         else:
             print("Ugyldig trekk")
@@ -154,11 +156,11 @@ class Historiker:
         return self.lastChoice
 
     def addAction(self, action):
-        if action.action == "stein":
+        if action.action.lower() == "stein":
             self.history.append(action)
-        elif action.action == "saks":
+        elif action.action.lower() == "saks":
             self.history.append(action)
-        elif action.action == "papir":
+        elif action.action.lower() == "papir":
             self.history.append(action)
         else:
             print("Ugyldig trekk")
@@ -225,24 +227,24 @@ class Historiker:
         return positions
 
     def count(self, action):  # helper function to count actions
-        if action.action == "stein":
+        if action.action.lower() == "stein":
             self.counts[0] = self.counts[0] + 1
-        elif action.action == "saks":
+        elif action.action.lower() == "saks":
             self.counts[1] = self.counts[1] + 1
-        elif action.action == "papir":
+        elif action.action.lower() == "papir":
             self.counts[2] = self.counts[2] + 1
         else:
-            print("Ugyldig trekk")
+            print("count: ugyldig trekk")
 
     def counter(self, action):  # helper function to choose a counter for an action
-        if action.action == "stein":
+        if action.action.lower() == "stein":
             return Aksjon("papir")
-        elif action.action == "saks":
+        elif action.action.lower() == "saks":
             return Aksjon("stein")
-        elif action.action == "papir":
+        elif action.action.lower() == "papir":
             return Aksjon("saks")
         else:
-            return "Ugyldig trekk"
+            return "counter: Ugyldig trekk"
 
     def randomAction(self):  # helper function to choose a random action
         n = randint(0, 2)
@@ -459,11 +461,11 @@ print (action1.__eq__(action2))
 print (action1.__gt__(action2))
 print (action3.__gt__(action1))
 print (action3.__eq__(action1))'''
-spill = MangeSpill("historiker", "sekvensiell", 100)
+'''spill = MangeSpill("historiker", "sekvensiell", 100)
 print(spill.spiller1.oppgi_navn())
 print(spill.spiller2.oppgi_navn())
 print(spill.arranger_turnering())
-print(spill)
+print(spill)'''
 
 
 
@@ -491,6 +493,21 @@ class GUITournament(Frame):
         self.resultat_label.set("Beskrivelse av siste spill kommer her")
         self.style = Style()
         self.fig = None
+
+
+    def arranger_enkeltspill(self, action):
+        userAction = action
+        aiAction = self.spiller.velg_aksjon()
+        if isinstance(self.spiller, Historiker) or isinstance(self.spiller, MestVanlig):
+            self.spiller.addAction(userAction)
+        if userAction.__gt__(aiAction):  # if user wins, add 1 point
+            self.resultater.append(1)
+        elif userAction.__eq__(aiAction):  # if tie, add 0.5 points to both
+            self.resultater.append(0.5)
+        else:
+            self.resultater.append(0)  # AI wins, add 1 point
+
+
 
     def setup_gui(self):
         self.parent.title("Stein - Saks - Papir")
@@ -521,13 +538,11 @@ class GUITournament(Frame):
         self.fig.get_tk_widget().grid(column=0, row=0)
         self.fig.show()
 
-        import matplotlib.pyplot as plt
-        import numpy
+
         plt.figure(self.fig.figure.number)  # Handle til figuren
         plt.ion()
         plt.plot(range(1, len(self.resultater) + 1),
-                 100 * numpy.cumsum(self.resultater) /
-                 range(1, len(self.resultater) + 1), 'b-', lw=4)
+                 100 * numpy.cumsum(self.resultater) / range(1, len(self.resultater) + 1), 'b-', lw=4)
         plt.ylim([0, 100])
         plt.xlim([1, max(1.1, len(self.resultater))])
         plt.plot(plt.xlim(), [50, 50], 'k--', lw=2)
@@ -535,11 +550,12 @@ class GUITournament(Frame):
         self.fig.show()
 
 
-'''# Styrer spiller gjennom Tkinter/GUI.
+
+# Styrer spiller gjennom Tkinter/GUI.
 root = Tk()
 # Definer et vindu med gitte dimensjoner
 root.geometry("1100x500+300+300")
 # Lag instans, og kjoer oppsett av GUI (knapper etc)
 GUITournament(root, Historiker(2)).setup_gui()
 # Vis vindu, og utfoer tilhoerende kommandoer
-root.mainloop()'''
+root.mainloop()
