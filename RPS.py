@@ -12,7 +12,8 @@ from tkinter.ttk import Frame, Button, Label, Style
 import pylab
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-import numpy
+from numpy import cumsum
+
 
 
 class Aksjon:
@@ -22,7 +23,7 @@ class Aksjon:
         self.action = action
 
     def __eq__(self, other):
-        return other.action == self.action
+        return other.action.lower() == self.action.lower()
 
     def __gt__(self, other):
         if self.action.lower() == "stein":
@@ -502,10 +503,26 @@ class GUITournament(Frame):
             self.spiller.addAction(userAction)
         if userAction.__gt__(aiAction):  # if user wins, add 1 point
             self.resultater.append(1)
+            self.resultat_label.set("You played {}, I played {} and you won".format(userAction.action, aiAction.action))
         elif userAction.__eq__(aiAction):  # if tie, add 0.5 points to both
             self.resultater.append(0.5)
+            self.resultat_label.set("You played {}, I played {} and it was a tie".format(userAction.action, aiAction.action))
         else:
             self.resultater.append(0)  # AI wins, add 1 point
+            self.resultat_label.set("You played {}, I played {} and I won".format(userAction.action, aiAction.action))
+        plt.ion()
+        r = []
+        for i in range(1, len(self.resultater) + 1):
+            r.append(i)
+        plt.plot(r,
+        100 * cumsum(self.resultater) /
+        r, 'b-', lw=4)
+        plt.ylim([0, 100])
+        plt.xlim([1, max(1.1, len(self.resultater))])
+        plt.plot(plt.xlim(), [50, 50], 'k--', lw=2)
+        plt.grid(b=True, which='both', color='0.65', linestyle='-')
+        self.fig.show()
+
 
 
 
@@ -539,15 +556,8 @@ class GUITournament(Frame):
         self.fig.show()
 
 
-        plt.figure(self.fig.figure.number)  # Handle til figuren
-        plt.ion()
-        plt.plot(range(1, len(self.resultater) + 1),
-                 100 * numpy.cumsum(self.resultater) / range(1, len(self.resultater) + 1), 'b-', lw=4)
-        plt.ylim([0, 100])
-        plt.xlim([1, max(1.1, len(self.resultater))])
-        plt.plot(plt.xlim(), [50, 50], 'k--', lw=2)
-        plt.grid(b=True, which='both', color='0.65', linestyle='-')
-        self.fig.show()
+
+
 
 
 
